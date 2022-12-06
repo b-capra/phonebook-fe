@@ -43,7 +43,9 @@ const App = () => {
     setNewNum('')
   }
 
-  const personsShown = persons.filter(person => true)
+  const personsShown = persons.filter(person => 
+    person.name.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   return (
     <div>
