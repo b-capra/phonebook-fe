@@ -1,4 +1,5 @@
 import './App.css';
+import Person from './component/Person'
 import {useState} from 'react'
 
 const App = () => {
@@ -7,10 +8,14 @@ const App = () => {
   ])
   const [newName, setNewName] = useState('')
 
+  const addPerson = (event) => {
+    event.preventDefault()
+  }
+
   return (
     <div>
-      <h2>Phoneboox</h2>
-      <form>
+      <h1>Phonebook</h1>
+      <form onSubmit={addPerson}>
         <div>
           Name: <input />
         </div>
@@ -19,6 +24,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
+      {persons.map(person => <Person key={person.name} person={person} />)}
     </div>
   )
 }
