@@ -10,6 +10,9 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
+
+    if (checkForDuplicate()) return
+      
     const newPerson = {
       name: newName
     }
@@ -20,6 +23,22 @@ const App = () => {
 
   const handleNameInput = (event) => {
     setNewName(event.target.value)
+  }
+
+  const checkForDuplicate = () => {
+    let isDuplicate = false
+    
+    persons.forEach((person) => {
+      if (person.name === newName) {
+        isDuplicate = true
+      }
+    })
+
+    if (isDuplicate) {
+      alert(`${newName} is already added to the phonebook`)
+    }
+
+    return isDuplicate
   }
 
   return (
