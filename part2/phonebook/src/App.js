@@ -1,5 +1,7 @@
 import './App.css';
-import Person from './component/Person'
+import Form from './component/Form'
+import Filter from './component/Filter'
+import List from './component/List'
 import {useState} from 'react'
 
 const App = () => {
@@ -51,16 +53,12 @@ const App = () => {
     <div>
       <h1>Phonebook</h1>
       <h2>New Additions:</h2>
-      <form onSubmit={addPerson}>
-        <div>Name: <input value={newName} onChange={handleNameInput} /></div>
-        <div>Number: <input value={newNum} onChange={handleNumInput} /></div>
-        <div><button type='submit'>Add</button></div>
-      </form>
+      <Form onSubmit={addPerson} 
+        name={newName} chngName={handleNameInput}
+        num={newNum} chngNum={handleNumInput} />
       <h2>Current Numbers:</h2>
-      <div>Search: <input value={searchTerm} onChange={searchCurrentNames} /> </div>
-      <ul>
-        {personsShown.map(person => <Person key={person.name} person={person} />)}
-      </ul>
+      <Filter term={searchTerm} search={searchCurrentNames} />
+      <List persons={personsShown} />
     </div>
   )
 }
