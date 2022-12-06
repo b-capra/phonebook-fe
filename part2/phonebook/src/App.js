@@ -10,6 +10,16 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
+    const newPerson = {
+      name: newName
+    }
+
+    setPersons(persons.concat(newPerson))
+    setNewName('')
+  }
+
+  const handleNameInput = (event) => {
+    setNewName(event.target.value)
   }
 
   return (
@@ -17,14 +27,16 @@ const App = () => {
       <h1>Phonebook</h1>
       <form onSubmit={addPerson}>
         <div>
-          Name: <input />
+          Name: <input value={newName} onChange={handleNameInput} />
         </div>
         <div>
           <button type='submit'>Add</button>
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map(person => <Person key={person.name} person={person} />)}
+      <ul>
+        {persons.map(person => <Person key={person.name} person={person} />)}
+      </ul>
     </div>
   )
 }
