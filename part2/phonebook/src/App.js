@@ -10,10 +10,27 @@ const App = () => {
   ])
   const [newName, setNewName] = useState('')
   const [newNum, setNewNum] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const handleNameInput = (event) => setNewName(event.target.value)
+  const handleNumInput = (event) => setNewNum(event.target.value)
+  const searchCurrentNames = (event) => setSearchTerm(event.target.value)
+
+  const checkForDuplicate = () => {
+    let isDuplicate = false
+    persons.forEach((person) => {
+      if (person.name === newName) {
+        isDuplicate = true
+      }
+    })
+    if (isDuplicate) {
+      alert(`${newName} is already added to the phonebook`)
+    }
+    return isDuplicate
+  }
 
   const addPerson = (event) => {
     event.preventDefault()
-
     if (checkForDuplicate()) return
       
     const newPerson = {
@@ -26,41 +43,21 @@ const App = () => {
     setNewNum('')
   }
 
-  const handleNameInput = (event) => {
-    setNewName(event.target.value)
-  }
-
-  const handleNumInput = (event) => {
-    setNewNum(event.target.value)
-  }
-
-  const checkForDuplicate = () => {
-    let isDuplicate = false
-    
-    persons.forEach((person) => {
-      if (person.name === newName) {
-        isDuplicate = true
-      }
-    })
-
-    if (isDuplicate) {
-      alert(`${newName} is already added to the phonebook`)
-    }
-
-    return isDuplicate
-  }
+  const personsShown = persons.filter(person => true)
 
   return (
     <div>
       <h1>Phonebook</h1>
+      <h2>New Additions:</h2>
       <form onSubmit={addPerson}>
         <div>Name: <input value={newName} onChange={handleNameInput} /></div>
         <div>Number: <input value={newNum} onChange={handleNumInput} /></div>
         <div><button type='submit'>Add</button></div>
       </form>
-      <h2>Numbers</h2>
+      <h2>Current Numbers:</h2>
+      <div>Search: <input value={searchTerm} onChange={searchCurrentNames} /> </div>
       <ul>
-        {persons.map(person => <Person key={person.name} person={person} />)}
+        {personsShown.map(person => <Person key={person.name} person={person} />)}
       </ul>
     </div>
   )
