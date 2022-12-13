@@ -39,13 +39,16 @@ const App = () => {
       
     const newPerson = {
       name: newName,
-      number: newNum,
-      id: persons.length + 1
+      number: newNum
     }
 
-    setPersons(persons.concat(newPerson))
-    setNewName('')
-    setNewNum('')
+    axios
+      .post('http://localhost:3001/persons', newPerson)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNum('')
+      })
   }
 
   const personsShown = persons.filter(person => 
