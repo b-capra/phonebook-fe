@@ -24,7 +24,7 @@ const App = () => {
 
   const checkForExisting = () => {
     let alreadyExists = false
-    
+
     for (const person of persons) {
       if (person.name === newName) {alreadyExists = true}
       if (alreadyExists) {
@@ -69,6 +69,12 @@ const App = () => {
     person.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
+  const removePerson = (id) => {
+    dataService
+      .remove(id)
+      .then(setPersons(persons.filter(person => person.id !== id)))
+  }
+
   return (
     <div>
       <h1>Phonebook</h1>
@@ -78,7 +84,7 @@ const App = () => {
         num={newNum} chngNum={handleNumInput} />
       <h2>Current Numbers:</h2>
       <Filter term={searchTerm} search={searchCurrentNames} />
-      <List persons={personsShown} />
+      <List persons={personsShown} remove={removePerson} />
     </div>
   )
 }
