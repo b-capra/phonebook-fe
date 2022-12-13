@@ -10,20 +10,27 @@ const App = () => {
   const [newNum, setNewNum] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
 
+  const handleNameInput = (event) => setNewName(event.target.value)
+  const handleNumInput = (event) => setNewNum(event.target.value)
+  const searchCurrentNames = (event) => setSearchTerm(event.target.value)
+  
+  const personsShown = persons.filter(person => 
+    person.name.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
   useEffect(() => {
     dataService
       .getAll()
       .then(initialList => setPersons(initialList))
   }, [])
 
-  const handleNameInput = (event) => setNewName(event.target.value)
-  const handleNumInput = (event) => setNewNum(event.target.value)
-  const searchCurrentNames = (event) => setSearchTerm(event.target.value)
-
-  const confirmUpdate = () => {return window.confirm(`${newName} is already added to the phonebook. Would you like to update their number?`)}
-
   const checkForExisting = () => {
     let alreadyExists = false
+
+    const confirmUpdate = () => 
+      {return window.confirm(
+        `${newName} is already added to the phonebook. Would you like to update their number?`
+      )}
 
     for (const person of persons) {
       if (person.name === newName) {alreadyExists = true}
@@ -64,10 +71,6 @@ const App = () => {
         setNewNum('')
       })
   }
-
-  const personsShown = persons.filter(person => 
-    person.name.toLowerCase().includes(searchTerm.toLowerCase())
-  )
 
   const removePerson = (id) => {
     dataService
