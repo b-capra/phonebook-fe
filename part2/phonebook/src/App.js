@@ -1,5 +1,4 @@
 import {useState, useEffect} from 'react'
-import axios from 'axios'
 import dataService from './services/phonebook'
 import Form from './component/Form'
 import Filter from './component/Filter'
@@ -14,30 +13,44 @@ const App = () => {
   useEffect(() => {
     dataService
       .getAll()
-      .then(initialList => {setPersons(initialList)})
+      .then(initialList => setPersons(initialList))
   }, [])
 
   const handleNameInput = (event) => setNewName(event.target.value)
   const handleNumInput = (event) => setNewNum(event.target.value)
   const searchCurrentNames = (event) => setSearchTerm(event.target.value)
 
-  const checkForDuplicate = () => {
-    let isDuplicate = false
-    persons.forEach((person) => {
-      if (person.name === newName) {
-        isDuplicate = true
+  const confirmUpdate = () => {return window.confirm(`${newName} is already added to the phonebook. Would you like to update their number?`)}
+
+  const checkForExisting = () => {
+    let alreadyExists = false
+    
+    for (const person of persons) {
+      if (person.name === newName) {alreadyExists = true}
+      if (alreadyExists) {
+        if (confirmUpdate()) {updateNumber(person.id)}
+        break
       }
-    })
-    if (isDuplicate) {
-      alert(`${newName} is already added to the phonebook`)
     }
-    return isDuplicate
+
+    return alreadyExists
+  }
+
+  const updateNumber = id => {
+    const person = persons.find(p => p.id === id)
+    const updatedPerson = {...person, number: newNum}
+
+    dataService
+      .update(id, updatedPerson)
+      .then(returnedPerson => {
+        setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+      })
   }
 
   const addPerson = (event) => {
     event.preventDefault()
-    if (checkForDuplicate()) return
-      
+    if (checkForExisting()) return
+
     const newPerson = {
       name: newName,
       number: newNum
