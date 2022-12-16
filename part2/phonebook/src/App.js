@@ -11,6 +11,7 @@ const App = () => {
   const [newNum, setNewNum] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   const [message, setMessage] = useState(null)
+  const [errorFlag, setErrorFlag] = useState(false) 
 
   const handleNameInput = (event) => setNewName(event.target.value)
   const handleNumInput = (event) => setNewNum(event.target.value)
@@ -53,12 +54,25 @@ const App = () => {
       .update(id, updatedPerson)
       .then(returnedPerson => {
         setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+        setErrorFlag(false)
         setMessage(
-          `Changed ${returnedPerson.name}'s number to ${returnedPerson.number}`
+          `Changed ${returnedPerson.name}'s number to ${returnedPerson.number}.`
         )
         setTimeout(() => {
           setMessage(null)
         }, 5000)
+        setNewName('')
+        setNewNum('')
+      })
+      .catch(error => {
+        setErrorFlag(true)
+        setMessage(
+          `Error: ${updatedPerson.name} was already removed from the server.`
+        )
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+        setPersons(persons.filter(per => per.id !== id))
         setNewName('')
         setNewNum('')
       })
@@ -77,8 +91,9 @@ const App = () => {
       .create(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
+        setErrorFlag(false)
         setMessage(
-          `Added ${returnedPerson.name} to the phonebook`
+          `Added ${returnedPerson.name} to the phonebook.`
         )
         setTimeout(() => {
           setMessage(null)
@@ -97,7 +112,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={message}/>
+      <Notification message={message} error={errorFlag} />
       <h2>New Additions:</h2>
       <Form onSubmit={addPerson} 
         name={newName} chngName={handleNameInput}
