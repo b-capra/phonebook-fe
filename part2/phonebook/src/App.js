@@ -3,12 +3,14 @@ import dataService from './services/phonebook'
 import Form from './component/Form'
 import Filter from './component/Filter'
 import List from './component/List'
+import Notification from './component/Notif'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNum, setNewNum] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
+  const [message, setMessage] = useState(null)
 
   const handleNameInput = (event) => setNewName(event.target.value)
   const handleNumInput = (event) => setNewNum(event.target.value)
@@ -51,6 +53,14 @@ const App = () => {
       .update(id, updatedPerson)
       .then(returnedPerson => {
         setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+        setMessage(
+          `Changed ${returnedPerson.name}'s number to ${returnedPerson.number}`
+        )
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+        setNewName('')
+        setNewNum('')
       })
   }
 
@@ -67,6 +77,12 @@ const App = () => {
       .create(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
+        setMessage(
+          `Added ${returnedPerson.name} to the phonebook`
+        )
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
         setNewName('')
         setNewNum('')
       })
@@ -81,6 +97,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={message}/>
       <h2>New Additions:</h2>
       <Form onSubmit={addPerson} 
         name={newName} chngName={handleNameInput}
