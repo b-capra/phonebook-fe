@@ -1,5 +1,3 @@
-import './Notif.css'
-
 const Notification = ({message, error}) => {
   if (message === null) {
     return null
