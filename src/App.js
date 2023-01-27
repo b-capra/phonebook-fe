@@ -80,7 +80,7 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    if (checkForExisting()) return
+    // if (checkForExisting()) return
 
     const newPerson = {
       name: newName,
