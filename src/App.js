@@ -38,7 +38,7 @@ const App = () => {
     for (const person of persons) {
       if (person.name === newName) {alreadyExists = true}
       if (alreadyExists) {
-        if (confirmUpdate()) {updateNumber(person.id)}
+        if (confirmUpdate()) {updateNumber(person._id)}
         break
       }
     }
@@ -47,13 +47,13 @@ const App = () => {
   }
 
   const updateNumber = id => {
-    const person = persons.find(p => p.id === id)
+    const person = persons.find(person => person._id === id)
     const updatedPerson = {...person, number: newNum}
 
     dataService
       .update(id, updatedPerson)
       .then(returnedPerson => {
-        setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+        setPersons(persons.map(person => person._id !== id ? person : returnedPerson))
         setErrorFlag(false)
         setMessage(
           `Changed ${returnedPerson.name}'s number to ${returnedPerson.number}.`
@@ -72,7 +72,7 @@ const App = () => {
         setTimeout(() => {
           setMessage(null)
         }, 5000)
-        setPersons(persons.filter(per => per.id !== id))
+        setPersons(persons.filter(person => person._id !== id))
         setNewName('')
         setNewNum('')
       })
@@ -101,12 +101,23 @@ const App = () => {
         setNewName('')
         setNewNum('')
       })
+      .catch(error => {
+        setErrorFlag(true)
+        setMessage(
+          `Error: ${error.response.data.error}`
+        )
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+        setNewName('')
+        setNewNum('')
+      })
   }
 
   const removePerson = (id) => {
     dataService
       .remove(id)
-      .then(setPersons(persons.filter(person => person.id !== id)))
+      .then(setPersons(persons.filter(person => person._id !== id)))
   }
 
   return (
